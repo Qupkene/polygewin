@@ -51,8 +51,11 @@ async def save_market(session: AsyncSession, market: Market) -> None:
     tokens_json = json.dumps([t.model_dump(mode="json") for t in market.tokens])
     outcomes_json = json.dumps(market.outcomes)
 
+    # Use question field as title if title is empty (Gamma API uses 'question')
+    effective_title = market.title or market.question
+
     if existing:
-        existing.title = market.title
+        existing.title = effective_title
         existing.description = market.description
         existing.outcomes = outcomes_json
         existing.tokens = tokens_json
@@ -63,7 +66,7 @@ async def save_market(session: AsyncSession, market: Market) -> None:
         db_market = MarketDB(
             condition_id=market.condition_id,
             question_id=market.question_id,
-            title=market.title,
+            title=effective_title,
             description=market.description,
             outcomes=outcomes_json,
             tokens=tokens_json,
