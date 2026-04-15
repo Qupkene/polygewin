@@ -1,5 +1,7 @@
 """CLI entry point for polybot."""
 
+import asyncio
+
 import click
 from rich.console import Console
 
@@ -13,12 +15,19 @@ def cli():
     pass
 
 
-@cli.command()
+@cli.command("collect-data")
 def collect_data():
-    """Run continuous data collection (markets + forecasts)."""
+    """Run continuous data collection (markets + forecasts every 5 min)."""
     console.print("[bold green]Starting data collection...[/bold green]")
     console.print("Collecting weather markets and forecasts every 5 minutes.")
-    console.print("[yellow]Not yet implemented - Phase 1[/yellow]")
+    console.print("Press Ctrl+C to stop.\n")
+
+    from scripts.collect_data import main as collect_main
+
+    try:
+        asyncio.run(collect_main())
+    except KeyboardInterrupt:
+        console.print("\n[yellow]Data collection stopped.[/yellow]")
 
 
 @cli.command()
@@ -49,9 +58,12 @@ def trade(dry_run: bool, i_understand_i_can_lose_money: bool):
 
 @cli.command()
 def health():
-    """Check system health (DB, APIs, kill switch)."""
-    console.print("[bold]Running health checks...[/bold]")
-    console.print("[yellow]Not yet implemented[/yellow]")
+    """Check data health (row counts, collection status)."""
+    console.print("[bold]Running data health check...[/bold]\n")
+
+    from scripts.data_health_check import run_health_check
+
+    asyncio.run(run_health_check())
 
 
 if __name__ == "__main__":

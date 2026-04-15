@@ -34,8 +34,7 @@ logs/
 htmlcov/
 .pytest_cache/
 
-# Alembic auto-generated
-alembic/versions/*.py
+# Alembic (keep .gitkeep, track all migration files)
 !alembic/versions/.gitkeep
 
 # OS
