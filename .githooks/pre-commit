@@ -1,0 +1,20 @@
+#!/bin/sh
+# Pre-commit hook: prevent committing .env files or private keys
+
+# Check for .env files being staged
+if git diff --cached --name-only | grep -qE '^\\.env$|^\\.env\\.local$'; then
+    echo "ERROR: Attempting to commit .env file. This is forbidden."
+    echo "Remove it from staging: git reset HEAD .env"
+    exit 1
+fi
+
+# Check for actual private key values in staged files (not variable names)
+# Matches: literal hex keys (0x followed by 64 hex chars as one token), or PRIVATE_KEY=0x...
+if git diff --cached --diff-filter=d -U0 | grep -qE '(PRIVATE_KEY\s*=\s*"?0x[a-fA-F0-9]|"0x[a-fA-F0-9]{64}")'; then
+    echo "ERROR: Possible private key value detected in staged changes."
+    echo "Review your changes and remove any secrets before committing."
+    exit 1
+fi
+
+echo "Pre-commit checks passed."
+exit 0

@@ -1,0 +1,46 @@
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Alembic auto-generated
+alembic/versions/*.py
+!alembic/versions/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker volumes
+pgdata/

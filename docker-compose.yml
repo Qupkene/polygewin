@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: polybot-db
+    environment:
+      POSTGRES_USER: polybot
+      POSTGRES_PASSWORD: polybot_dev
+      POSTGRES_DB: polybot
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U polybot"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
